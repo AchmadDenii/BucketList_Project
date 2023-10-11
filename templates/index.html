@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="My website title" />
+    <meta
+      property="og:description"
+      content="Summary of the contents of the page you are viewing"
+    />
+    <meta
+      property="og:image"
+      content="{{ url_for('static', filename='ogimage.png') }}"
+    />
 
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -94,33 +103,35 @@
         show_bucket();
       });
 
-// menampilkan isi Bucket List 
+      // menampilkan isi Bucket List
       function show_bucket() {
         $("#bucket-list").empty();
         $.ajax({
-        type: "GET",
-        url: "/bucket",
-        data: {},
-        success: function (response) {
+          type: "GET",
+          url: "/bucket",
+          data: {},
+          success: function (response) {
             let rows = response["buckets"];
-            for (let i = 0; i < rows.length; i++) { 
-                let bucket = rows[i]["bucket"];
-                let num = rows[i]["num"];
-                let done = rows[i]["done"];
+            for (let i = 0; i < rows.length; i++) {
+              let bucket = rows[i]["bucket"];
+              let num = rows[i]["num"];
+              let done = rows[i]["done"];
 
-                let temp_html = `<li>
-                                    <h2 class="${done === 1 ? 'done' : ''}">✅ ${bucket}</h2>
+              let temp_html = `<li>
+                                    <h2 class="${
+                                      done === 1 ? "done" : ""
+                                    }">✅ ${bucket}</h2>
                                     <button onclick="done_bucket(${num})" type="button" class="btn btn-outline-primary">Done!!!</button>
                                     <button onclick="delete_bucket(${num})" type="button" class="btn btn-outline-danger">Delete</button>
                                 </li>`;
 
-                $("#bucket-list").append(temp_html);
+              $("#bucket-list").append(temp_html);
             }
-        },
-    });
-}
+          },
+        });
+      }
 
-// menambah data Bucket list
+      // menambah data Bucket list
       function save_bucket() {
         let bucket = $("#bucket").val();
         $.ajax({
@@ -134,32 +145,31 @@
         });
       }
 
-// mencoret data bucket ketika selesai
-      function done_bucket(num){
+      // mencoret data bucket ketika selesai
+      function done_bucket(num) {
         $.ajax({
-        type: "POST",
-        url: "/bucket/done",
-        data: {'num_give':num},
-        success: function (response) {
-            alert(response["msg"])
-            window.location.reload()
-        }
-        });
-    }
-
-// menghapus data bucket list
-    function delete_bucket(num) {
-    $.ajax({
-        type: "POST",
-        url: "/bucket/delete",
-        data: {'num_give': num},
-        success: function (response) {
+          type: "POST",
+          url: "/bucket/done",
+          data: { num_give: num },
+          success: function (response) {
             alert(response["msg"]);
             window.location.reload();
-        }
-    });
-}
+          },
+        });
+      }
 
+      // menghapus data bucket list
+      function delete_bucket(num) {
+        $.ajax({
+          type: "POST",
+          url: "/bucket/delete",
+          data: { num_give: num },
+          success: function (response) {
+            alert(response["msg"]);
+            window.location.reload();
+          },
+        });
+      }
     </script>
   </head>
   <body>
